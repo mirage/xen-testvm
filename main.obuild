@@ -1,0 +1,8 @@
+obuild-ver: 1
+name: testvm
+version: 0.0.0
+
+executable mir-testvm
+  main: main.ml
+  buildDepends: mirage, mirage-net, rpclib.syntax, rpclib.json,  bigarray
+  pp: camlp4o

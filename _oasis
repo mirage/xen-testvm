@@ -14,5 +14,5 @@ Executable            testvm
   MainIs:             testvm.ml
   Install:            false
   Custom:             true
-  BuildDepends:       lwt, lwt.syntax, cstruct, mirage
+  BuildDepends:       lwt, lwt.syntax, cstruct, mirage, rpclib
 

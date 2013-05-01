@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 8a878abff78f9ee3a9c9e4b579bf26a5)
+# DO NOT EDIT (digest: 963b4b30034ced5b83dbdcd9522b7e86)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -18,10 +18,12 @@
 <testvm.{native,byte,nobj.o}>: pkg_lwt.syntax
 <testvm.{native,byte,nobj.o}>: pkg_cstruct
 <testvm.{native,byte,nobj.o}>: pkg_mirage
+<testvm.{native,byte,nobj.o}>: pkg_rpclib
 <*.ml{,i}>: pkg_lwt
 <*.ml{,i}>: pkg_lwt.syntax
 <*.ml{,i}>: pkg_cstruct
 <*.ml{,i}>: pkg_mirage
+<*.ml{,i}>: pkg_rpclib
 <testvm.{native,byte,nobj.o}>: custom
 # OASIS_STOP
 true: annot
@@ -29,4 +31,4 @@ true: annot
 <*.ml>: syntax_camlp4o
 <*/*>: pkg_lwt.syntax
 <*.ml>: pkg_lwt.syntax
-
+<*.ml>: pkg_rpclib.syntax
