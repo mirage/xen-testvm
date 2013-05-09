@@ -10,7 +10,7 @@ let rec ticker () =
 	    Console.log_s "Tick" >> 
     ticker ()
 
-let main _ _ _ =
+let main () =
   Random.self_init ();
   let _ = Mirage_guest_agent.control_watch () in
   let _ = Block.block_tickle () in
