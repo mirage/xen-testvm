@@ -7,12 +7,22 @@ License:     LGPL-2.1 with OCaml linking exception
 Plugins:     META (0.2)
 BuildTools:  ocamlbuild
 
-Executable            testvm
-  Target:             xen
+Flag cli
+  Description: build the UNIX cli
+  Default: false
+
+Library testvmlib
   CompiledObject:     best
-  Path:               .
-  MainIs:             testvm.ml
-  Install:            false
-  Custom:             true
-  BuildDepends:       lwt, lwt.syntax, cstruct, mirage, rpclib
+  Path:               lib
+  Findlibname:        testvmlib
+  Modules:            Test_interface, Vchan_http, ExtentlistSet
+  BuildDepends:       lwt, vchan, cohttp, mirage, rpclib
+
+Executable client
+  Build$:             flag(cli)
+  CompiledObject: best
+  Path: client
+  MainIs: client.ml
+  BuildDepends: lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt
+
 
