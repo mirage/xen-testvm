@@ -2,5 +2,12 @@ external shutdown : unit -> unit = ""
 external reboot : unit -> unit = ""
 external crash : unit -> unit = ""
 
-module Int64extentlist = ExtentlistSet.ExtentlistSet(struct type t=int64 let add=Int64.add let sub=Int64.sub let zero=0L end)
+type junk = (ExtentlistSet.Int64extentlist.t * char) list
+
+
+module Block = struct
+  external hammer : unit -> unit = ""
+  external tickle : unit -> unit = ""
+  external write_junk : int -> junk -> junk = ""
+end
 

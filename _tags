@@ -47,3 +47,4 @@ true: annot
 <*.ml>: pkg_lwt.syntax
 <*.ml>: pkg_rpclib.syntax
 <lib/test_interface.ml>: pkg_rpclib.idl
+<lib/extentlistSet.ml>: pkg_rpclib.syntax

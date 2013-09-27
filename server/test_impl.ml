@@ -25,8 +25,27 @@ let crash context () =
   Lwt.return ()
 
 module Block = struct
-  let hammer () = 
-    Block.block_hammer ()
+  let hammer context () = 
+    let _ = Block.block_hammer () in
+    Lwt.return ()
+
+  let tickle context () =
+    let _ = Block.block_tickle () in
+    Lwt.return ()
+
+  let write_junk context size junk =
+    let finished_t, u = Lwt.task () in
+    let listen_t = OS.Devices.listen (fun id ->
+	OS.Devices.find_blkif id >>= function
+        | None -> return ()
+        | Some blkif -> Lwt.wakeup u blkif; return ()
+      ) in
+    (* Get one device *)
+    lwt blkif = finished_t in
+    (* Cancel the listening thread *)
+    Lwt.cancel listen_t;
+    OS.Console.log_s (Printf.sprintf "size=%Ld" blkif#size) >>
+    Junk.write_junk blkif (Int64.div blkif#size 4096L) size junk
 
 end
 

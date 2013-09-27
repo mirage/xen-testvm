@@ -10,7 +10,7 @@ let main () =
   let domid = int_of_string Sys.argv.(1) in
   lwt vch = V.client ~evtchn_h ~domid ~xs_path:(Printf.sprintf "/local/domain/%d/data/vchan" domid) in
   RpcM.vch := Some vch;
-  lwt () = Client.shutdown () in
+  lwt () = Client.Block.tickle () in
   Lwt.return ()
 
 let _ =

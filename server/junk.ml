@@ -20,7 +20,7 @@ let write_junk blkif size n current_junk =
             lwt () = write_char page blkif char start len in
             let myextentlist = [(start,Int64.of_int len)] in
             inner (m+1) ((myextentlist,char)::(List.map (fun (extlist,c) -> 
-				(Test_interface.Int64extentlist.difference extlist myextentlist, c)) cur))
+				(ExtentlistSet.Int64extentlist.difference extlist myextentlist, c)) cur))
 	in
 	inner 0 current_junk
 		
