@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 27fff20ec6c3fa40c8f0fd1406230a54)
+# DO NOT EDIT (digest: d506345c9ebbe082517a40bee403d534)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -28,6 +28,7 @@
 <client/client.{native,byte}>: pkg_xenstore.client
 <client/client.{native,byte}>: pkg_xenstore_transport.lwt
 <client/client.{native,byte}>: pkg_xenctrl.lwt
+<client/client.{native,byte}>: pkg_cmdliner
 <client/client.{native,byte}>: pkg_mirage
 <client/client.{native,byte}>: pkg_rpclib
 <client/*.ml{,i}>: use_testvmlib
@@ -37,6 +38,7 @@
 <client/*.ml{,i}>: pkg_xenstore.client
 <client/*.ml{,i}>: pkg_xenstore_transport.lwt
 <client/*.ml{,i}>: pkg_xenctrl.lwt
+<client/*.ml{,i}>: pkg_cmdliner
 <client/*.ml{,i}>: pkg_mirage
 <client/*.ml{,i}>: pkg_rpclib
 # OASIS_STOP

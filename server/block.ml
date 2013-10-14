@@ -2,16 +2,25 @@ open Lwt (* provides >>= and join *)
 open OS  (* provides Time, Console and Main *)
 open Printf
 
+
+let block_devices : string list ref = ref []
+
 let block_tickle () =
+	lwt _ = Console.log_s "block tickle 2" in
 	let finished_t, u = Lwt.task () in
 	let listen_t = OS.Devices.listen (fun id ->
+		lwt () = Console.log_s "Got a thing from listen" in
 		OS.Devices.find_blkif id >>=
 			function
-				| None -> return ()
-				| Some blkif -> Lwt.wakeup u blkif; return ()
+				| None -> 
+					lwt () = Console.log_s "Nothing!" in return ()
+				| Some blkif -> 
+					lwt () = Console.log_s "Something!" in
+					Lwt.wakeup u blkif; return ()
 	) in
 	(* Get one device *)
 	lwt blkif = finished_t in
+	lwt _ = Console.log_s "Got a device!" in
 	(* Cancel the listening thread *)
 	Lwt.cancel listen_t;
 	printf "ID: %s\n%!" blkif#id;

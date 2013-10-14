@@ -13,9 +13,9 @@ let dummy_guest_agent () =
 		lwt _ = try_lwt Xs.(immediate c (fun h -> read h "bar")) with _ -> return "" in
 		lwt myudid = Xs.(immediate c (fun h -> read h "unique-domain-id")) in
 		lwt () =
-			let kvs = [ "attr/PVAddons/MajorVersion","6";
-				    "attr/PVAddons/MinorVersion","2";
-				    "attr/PVAddons/MicroVersion","50";
+			let kvs = [ "data/PVAddons/MajorVersion","6";
+				    "data/PVAddons/MinorVersion","2";
+				    "data/PVAddons/MicroVersion","50";
 				    "data/os_name","Mirage";
 				    "data/os_majorver","0.9.6";
 				    "data/os_minorver","0";
@@ -29,7 +29,7 @@ let dummy_guest_agent () =
 
 let nic_update dev ip =
 	lwt c = Xs.make () in
-	Xs.(immediate c (fun h -> write h (Printf.sprintf "attr/eth%s/ip" (Netif.string_of_id dev)) ip)) >>= fun _ ->
+	Xs.(immediate c (fun h -> write h (Printf.sprintf "data/eth%s/ip" (Netif.string_of_id dev)) ip)) >>= fun _ ->
 	Xs.(immediate c (fun h -> write h "data/updated" "now"))
 	
 let suspend () =

@@ -23,6 +23,6 @@ Executable client
   CompiledObject: best
   Path: client
   MainIs: client.ml
-  BuildDepends: lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt
+  BuildDepends: lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt, cmdliner
 
 

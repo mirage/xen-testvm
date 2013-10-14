@@ -6,7 +6,7 @@ module type VCHAN =
   sig
     type t
     val read_into : t -> string -> int -> int -> int Lwt.t
-    val write_from_exactly : t -> string -> int -> int -> unit Lwt.t
+    val write_from : t -> string -> int -> int -> int Lwt.t
   end
 
 module IO = functor (V : VCHAN) -> 
@@ -48,7 +48,7 @@ struct
     V.read_into ic s 0 len >>= fun _ -> return (Some s)
 
   let write oc s =
-    V.write_from_exactly oc s 0 (String.length s)
+    lwt _ = V.write_from oc s 0 (String.length s) in Lwt.return ()
 end
 
 module Make ( V : VCHAN ) = struct
@@ -107,9 +107,25 @@ module Make ( V : VCHAN ) = struct
         | None ->
 	  Console.log_s "Failed to read content-length"
         | Some content_length ->
+          lwt _ = Console.log_s (Printf.sprintf "Read request headers: content_length=%s" content_length) in
 	  let content_length = int_of_string content_length in
 	  let request_txt = String.make content_length '\000' in
-	  lwt _ = V.read_into vch request_txt 0 content_length in
+	  lwt _ = 
+            let rec inner n =
+              lwt m = V.read_into vch request_txt n (content_length - n) in
+              Console.log_s (Printf.sprintf "Read %d" m) >>
+              if m = (content_length - n) then Lwt.return () else inner (n+m)
+            in inner 0
+          in
+          let rec print_120 n =
+            if content_length - n <= 120 
+            then Console.log_s (String.sub request_txt n (content_length - n)) 
+            else begin
+              Console.log_s (String.sub request_txt n 120) >>
+              print_120 (n+120)
+            end
+          in
+          lwt () = print_120 0 in
 	  let rpc_call = call_of_string request_txt in
 	  lwt () = Console.log_s (Printf.sprintf "%s" (Rpc.string_of_call rpc_call)) in
 	  lwt rpc_response = process () rpc_call in
