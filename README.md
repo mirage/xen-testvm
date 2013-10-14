@@ -1,7 +1,22 @@
 Xen Test VM.
 
-Requires mirage platform with the patches in github.com/jonludlam/mirage-platform.git, 'suspend-resume' branch.
+Build the server with:
 
-To rerun oasis, you'll need avsm's patched oasis in github.com/avsm/oasis.git, 'add-xen' branch.
+cd xen-testvm
+opam switch mirage-xen
+make
+make install
+cd server
+mirari configure --xen
+mirari build --xen
+sudo `which mirari` run --xen
+
+Build the client with:
+cd xen-testvm
+opam switch mirage-unix
+make
+./setup.bin -configure --enable-cli
+make
+
 
 
