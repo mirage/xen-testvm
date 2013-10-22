@@ -34,18 +34,20 @@ struct
       else inner (s ^ buf) 
     in inner ""
 
-  let read ic n =
+  let read_exactly ic n =
     let buf = String.create n in
     let rec inner left =
-      if left = 0 then return buf else begin
+      if left = 0 then return (Some buf) else begin
 	V.read_into ic buf (n-left) left >>= fun x ->
-	inner (left - x)
+        if x = 0
+        then return None
+        else inner (left - x)
       end
     in inner n
 
-  let read_exactly ic len =
+  let read ic len =
     let s = String.create len in
-    V.read_into ic s 0 len >>= fun _ -> return (Some s)
+    V.read_into ic s 0 len >>= fun n -> return (String.sub s 0 n)
 
   let write oc s =
     lwt _ = V.write_from oc s 0 (String.length s) in Lwt.return ()
