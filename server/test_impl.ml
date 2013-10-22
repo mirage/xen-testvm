@@ -29,16 +29,22 @@ let crash context () =
 module Vbd = struct
   let write_sector context devid sector contents = 
     let contents = Cohttp.Base64.decode contents in
-    (* Write page! *)
     lwt () =
-      if String.length contents <> 4096 
-      then Lwt.fail (Failure (Printf.sprintf "Expecting 4096 bytes of contents (got %d)" (String.length contents))) 
-      else Lwt.return () 
-    in
+      if String.length contents <> 512
+      then Lwt.fail (Failure (Printf.sprintf "Expecting 512 bytes of contents (got %d)" (String.length contents))) 
+      else Lwt.return () in
     lwt Some blkif = OS.Devices.find_blkif devid in
-    let page = Io_page.get 1 in
-    Io_page.string_blit contents 0 page 0 4096;
-    lwt () = blkif#write_page sector page in
+    (* We need to do a read/modify/write *)
+    let round_to_page = Int64.(shift_left (shift_right sector 2) 2) in
+    let offset_within_page = Int64.(to_int (sub sector round_to_page)) in
+    let stream = blkif#read_512 round_to_page 8L in
+    lwt blocks = Lwt_stream.to_list stream in
+    (* since our request was page aligned, we've got a single page *)
+    assert (List.length blocks = 1);
+    let block = List.hd blocks in
+    assert (block.Cstruct.off = 0);
+    Cstruct.blit_from_string contents 0 block (offset_within_page * 512) 512;
+    lwt () = blkif#write_page (Int64.mul round_to_page 512L) block.Cstruct.buffer in
     Lwt.return ()
 
   let read_sector context devid sector =
