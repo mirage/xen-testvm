@@ -42,7 +42,11 @@ module Vbd = struct
     Lwt.return ()
 
   let read_sector context devid sector =
-    Lwt.return ""
+    lwt Some blkif = OS.Devices.find_blkif devid in
+    let stream = blkif#read_512 sector 8L in
+    lwt list = Lwt_stream.to_list stream in
+    let strings = List.map Cstruct.to_string list in
+    Lwt.return (Cohttp.Base64.encode (String.concat "" strings))
 
   let list context () =
     let devids = !(Block.block_devices) in
