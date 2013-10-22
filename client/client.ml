@@ -152,6 +152,7 @@ let _ =
 
   let thread = 
     let evtchn_h = Eventchn.init () in
+    let _ = Activations.run evtchn_h in
     lwt vch = V.client ~evtchn_h ~domid ~xs_path:(Printf.sprintf "/local/domain/%d/data/vchan" domid) in
     RpcM.vch := Some vch;
     fn ()
