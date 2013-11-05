@@ -25,4 +25,9 @@ Executable client
   MainIs: client.ml
   BuildDepends: lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt, cmdliner
 
-
+Executable storage_test
+  Build$:             flag(cli)
+  CompiledObject:     best
+  Path:               storage_test
+  MainIs:             storage_test.ml
+  BuildDepends:       lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt, cmdliner
