@@ -1,19 +1,16 @@
 open Cmdliner
 open Lwt
 
-(*
 module Xs = Xs_client_lwt.Client(Xs_transport_lwt_unix_client)
 module V = Vchan.Make(Xs)
 module Vchan_http = Vchan_http.Make(V)
 module RpcM = Vchan_http.RpcM
 module Client = Test_interface.ClientM(RpcM)
-*)
 
-let pool = "http://st30.uk.xensource.com/"
+let pool = "http://localhost/"
 let username = "root"
-let password = "xenroot"
 
-let start kernel =
+let start kernel password =
   Printf.fprintf stderr "start kernel=%s\n%!" kernel;
   let t =
     Boot_disk.upload ~pool ~username ~password ~kernel >>= fun vdi ->
@@ -59,13 +56,17 @@ let kernel_filename =
   let doc = "Specify the kernel filename" in
   Arg.(required & pos 0 (some file) None & info [] ~doc ~docv:"FILENAME")
 
+let password =
+  let doc = "Local root password" in
+  Arg.(required & opt (some string) (Some "root") & info [] ~doc ~docv:"PASSWORD")
+
 let start_cmd =
   let man =
     [ `S "DESCRIPTION";
       `P "Upload a kernel and boot it.";
     ] in
   let doc = "Upload a kernel and boot it" in
-  Term.(ret (pure start $ kernel_filename)),
+  Term.(ret (pure start $ kernel_filename $ password)),
   Term.info "start" ~doc ~man
 
 let default = 
