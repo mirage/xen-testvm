@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: d506345c9ebbe082517a40bee403d534)
+# DO NOT EDIT (digest: 6973a425a1f468397c2e4eb86630205b)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -41,6 +41,37 @@
 <client/*.ml{,i}>: pkg_cmdliner
 <client/*.ml{,i}>: pkg_mirage
 <client/*.ml{,i}>: pkg_rpclib
+# Executable storage_test
+<storage_test/storage_test.{native,byte}>: use_testvmlib
+<storage_test/storage_test.{native,byte}>: pkg_lwt
+<storage_test/storage_test.{native,byte}>: pkg_vchan
+<storage_test/storage_test.{native,byte}>: pkg_cohttp
+<storage_test/storage_test.{native,byte}>: pkg_xenstore.client
+<storage_test/storage_test.{native,byte}>: pkg_xenstore_transport.lwt
+<storage_test/storage_test.{native,byte}>: pkg_xenctrl.lwt
+<storage_test/storage_test.{native,byte}>: pkg_cmdliner
+<storage_test/storage_test.{native,byte}>: pkg_xen-api-client
+<storage_test/storage_test.{native,byte}>: pkg_xen-api-client.lwt
+<storage_test/storage_test.{native,byte}>: pkg_mbr-format
+<storage_test/storage_test.{native,byte}>: pkg_fat-format
+<storage_test/storage_test.{native,byte}>: pkg_fat-format.lwt
+<storage_test/storage_test.{native,byte}>: pkg_mirage
+<storage_test/storage_test.{native,byte}>: pkg_rpclib
+<storage_test/*.ml{,i}>: use_testvmlib
+<storage_test/*.ml{,i}>: pkg_lwt
+<storage_test/*.ml{,i}>: pkg_vchan
+<storage_test/*.ml{,i}>: pkg_cohttp
+<storage_test/*.ml{,i}>: pkg_xenstore.client
+<storage_test/*.ml{,i}>: pkg_xenstore_transport.lwt
+<storage_test/*.ml{,i}>: pkg_xenctrl.lwt
+<storage_test/*.ml{,i}>: pkg_cmdliner
+<storage_test/*.ml{,i}>: pkg_xen-api-client
+<storage_test/*.ml{,i}>: pkg_xen-api-client.lwt
+<storage_test/*.ml{,i}>: pkg_mbr-format
+<storage_test/*.ml{,i}>: pkg_fat-format
+<storage_test/*.ml{,i}>: pkg_fat-format.lwt
+<storage_test/*.ml{,i}>: pkg_mirage
+<storage_test/*.ml{,i}>: pkg_rpclib
 # OASIS_STOP
 true: annot
 <*/*>: syntax_camlp4o
