@@ -30,4 +30,4 @@ Executable storage_test
   CompiledObject:     best
   Path:               storage_test
   MainIs:             storage_test.ml
-  BuildDepends:       lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt, cmdliner
+  BuildDepends:       lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt, cmdliner, xen-api-client, xen-api-client.lwt, mbr-format, fat-format, fat-format.lwt

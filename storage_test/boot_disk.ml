@@ -19,9 +19,11 @@ module IntMap = Map.Make(struct
   let compare (x: int) (y: int) = compare x y
 end)
 
+open Lwt
+
 let upload ~pool ~username ~password ~kernel =
   (* sector number -> disk data *)
-  let map = ref IntMap.empty
+  let map = ref IntMap.empty in
   (* simple ramdisk to contain the partition table, filesystem,
      kernel and grub config *)
   let module Mem = struct
@@ -88,37 +90,29 @@ let upload ~pool ~username ~password ~kernel =
 
   (* Load the kernel image (into RAM) *)
   ok (MemFS.create fs kernel_path);
+  let kernel_file = MemFS.file_of_path fs kernel_path in
   let len = Int64.to_int stats.Unix.LargeFile.st_size in
+  let buffer = Cstruct.create len in
   Lwt_unix.openfile kernel [ Unix.O_RDONLY ] 0 >>= fun fd ->
-  let sector = Cstruct.create (2 * 1024 * 1024) in
-  let rec loop offset remaining =
-    let this = min remaining (Cstruct.len buffer) in
-    let block = Cstruct.sub buffer 0 this in
-    really_read fd block >>= fun () ->
-    ok (MemFS.write fs kernel_file offset block);
-    let offset = offset + this in
-    let remaining = remaining - this in
-    if remaining > 0
-    then loop offset remaining
-    else return () in
-  loop 0 len >>= fun () ->
+  really_read fd buffer >>= fun () ->
+  ok (MemFS.write fs kernel_file 0 buffer);
   Lwt_unix.close fd >>= fun () ->
 
   (* Talk to xapi and create the target VDI *)
   let open Xen_api in
   let open Xen_api_lwt_unix in
-  let rpc = make uri in
+  let rpc = make pool in
     lwt session_id = Session.login_with_password rpc username password "1.0" in
     try_lwt
       lwt pools = Pool.get_all rpc session_id in
-      let pool = List.hd pools in
-      lwt sr = Pool.get_default_SR rpc session_id pool in
+      let the_pool = List.hd pools in
+      lwt sr = Pool.get_default_SR rpc session_id the_pool in
       lwt vdi = VDI.create ~rpc ~session_id ~name_label:"upload_disk" ~name_description:""
-        ~sR:sr ~virtual_size ~_type:`user ~sharable:false ~read_only:false
+        ~sR:sr ~virtual_size:stats.Unix.LargeFile.st_size ~_type:`user ~sharable:false ~read_only:false
         ~other_config:[] ~xenstore_data:[] ~sm_config:[] ~tags:[] in
       (try_lwt
-        let authentication = Disk.UserPassword(!username, !password) in
-        let uri = Disk.uri ~pool:(Uri.of_string !uri) ~authentication ~vdi in
+        let authentication = Disk.UserPassword(username, password) in
+        let uri = Disk.uri ~pool:(Uri.of_string pool) ~authentication ~vdi in
         lwt oc = Disk.start_upload ~chunked:false ~uri in
 
         (* MBR at sector 0 *)
@@ -127,10 +121,10 @@ let upload ~pool ~username ~password ~kernel =
         oc.Data_channel.really_write sector >>= fun () ->
         (* Create an empty sector (upload isn't sparse) *)
         let zeroes = Cstruct.create 512 in
-        for i = 0 to Csturct.len zeroes - 1 do
+        for i = 0 to Cstruct.len zeroes - 1 do
           Cstruct.set_uint8 zeroes i 0
         done;
-        let write_zeroes n =
+        let rec write_zeroes n =
           if n = 0
           then return ()
           else
