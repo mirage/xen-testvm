@@ -25,4 +25,9 @@ Executable client
   MainIs: client.ml
   BuildDepends: lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt, cmdliner
 
-
+Executable lifecycle_test
+  Build$:             flag(cli)
+  CompiledObject:     best
+  Path:               lifecycle_test
+  MainIs:             lifecycle_test.ml
+  BuildDepends:       lwt, vchan, cohttp, testvmlib, xenstore.client, xenstore_transport.lwt, xenctrl.lwt, cmdliner, xen-api-client, xen-api-client.lwt, mbr-format, fat-format, fat-format.lwt, oUnit

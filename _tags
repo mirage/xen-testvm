@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: d506345c9ebbe082517a40bee403d534)
+# DO NOT EDIT (digest: fc9717d9d97abf37463f636b6e7b1bd3)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -41,6 +41,39 @@
 <client/*.ml{,i}>: pkg_cmdliner
 <client/*.ml{,i}>: pkg_mirage
 <client/*.ml{,i}>: pkg_rpclib
+# Executable lifecycle_test
+<lifecycle_test/lifecycle_test.{native,byte}>: use_testvmlib
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_lwt
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_vchan
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_cohttp
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_xenstore.client
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_xenstore_transport.lwt
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_xenctrl.lwt
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_cmdliner
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_xen-api-client
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_xen-api-client.lwt
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_mbr-format
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_fat-format
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_fat-format.lwt
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_oUnit
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_mirage
+<lifecycle_test/lifecycle_test.{native,byte}>: pkg_rpclib
+<lifecycle_test/*.ml{,i}>: use_testvmlib
+<lifecycle_test/*.ml{,i}>: pkg_lwt
+<lifecycle_test/*.ml{,i}>: pkg_vchan
+<lifecycle_test/*.ml{,i}>: pkg_cohttp
+<lifecycle_test/*.ml{,i}>: pkg_xenstore.client
+<lifecycle_test/*.ml{,i}>: pkg_xenstore_transport.lwt
+<lifecycle_test/*.ml{,i}>: pkg_xenctrl.lwt
+<lifecycle_test/*.ml{,i}>: pkg_cmdliner
+<lifecycle_test/*.ml{,i}>: pkg_xen-api-client
+<lifecycle_test/*.ml{,i}>: pkg_xen-api-client.lwt
+<lifecycle_test/*.ml{,i}>: pkg_mbr-format
+<lifecycle_test/*.ml{,i}>: pkg_fat-format
+<lifecycle_test/*.ml{,i}>: pkg_fat-format.lwt
+<lifecycle_test/*.ml{,i}>: pkg_oUnit
+<lifecycle_test/*.ml{,i}>: pkg_mirage
+<lifecycle_test/*.ml{,i}>: pkg_rpclib
 # OASIS_STOP
 true: annot
 <*/*>: syntax_camlp4o
