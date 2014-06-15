@@ -1,4 +1,3 @@
-open OS  (* provides Time, Console and Main *)
 open Lwt
 
 let write_char page blkif c start len =

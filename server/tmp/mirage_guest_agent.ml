@@ -1,5 +1,4 @@
 open Lwt (* provides >>= and join *)
-open OS  (* provides Time, Console and Main *)
 open Printf
 
 let udid = ref ""
