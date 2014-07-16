@@ -1,7 +1,12 @@
 
 open OS
 
-module V = Vchan.Make(Activations)(Xs)
+module V = struct
+  include Vchan.Make(Activations)(Xs)
+  type 'a io = 'a Lwt.t
+  type buffer = Cstruct.t
+  type flow = t
+end
 module Vchan_http = Vchan_http.Make(V)
 
 let (>>=) = Lwt.bind
@@ -32,8 +37,9 @@ let with_vchan evtchn_h domid nodepath f =
   V.server ~evtchn_h ~domid ~xs_path:nodepath
     ~read_size:4000 ~write_size:4000 ~persist:true
   >>= fun vch ->
+  let flow = Vchan_http.openflow vch in
   Printf.printf "Initialization done!\n%!";
-  f vch
+  f flow
       
 
 open V1_LWT
@@ -41,11 +47,11 @@ open V1_LWT
 let (>>=) = Lwt.bind
 
 module Main (C:CONSOLE) = struct
-  let buf = String.create 5000
+  let buf = String.create 1
 
   let rec echo vch =
-    V.read_into vch buf 0 5000 >>= fun nb_read ->
-    V.write_from_exactly vch buf 0 nb_read >>= fun () ->
+    Vchan_http.IO.read_into vch buf 0 (String.length buf) >>= fun () ->
+    Vchan_http.IO.write_from vch buf 0 (String.length buf) >>= fun () ->
     echo vch
 
   let start c =
