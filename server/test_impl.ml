@@ -32,7 +32,7 @@ let shutdown context () =
     Lwt.return ()
   in
   Lwt.return ()
-    
+
 let reboot context () =
   let thread = 
     lwt () = Time.sleep 0.1 in
@@ -40,7 +40,7 @@ let reboot context () =
     Lwt.return () 
   in
   Lwt.return ()
-    
+
 let crash context () =
   let thread = 
     lwt () = Time.sleep 0.1 in
@@ -83,14 +83,14 @@ module Vbd = struct
     Lwt.return devids
 
   let start_hammer context devid = 
-(*    let _ = Block.block_hammer () in*)
+    (*    let _ = Block.block_hammer () in*)
     Lwt.return ()
 
   let stop_hammer context devid = 
     Lwt.return ()
 
   let start_tickle context devid =
-(*    let _ = Block.block_tickle () in*)
+    (*    let _ = Block.block_tickle () in*)
     Lwt.return ()
 
   let stop_tickle context devid =
@@ -106,21 +106,21 @@ end
 
 module Vif = struct
   let list context () =
-(*    match !net_manager with 
-    | Some t ->
-      let vifs = Net.Manager.get_intfs t in
-      Lwt.return (List.map (fun (x,y) -> OS.Netif.string_of_id x) vifs)
-    | None -> *)
-      Lwt.return []
+    (*    match !net_manager with 
+          | Some t ->
+          let vifs = Net.Manager.get_intfs t in
+          Lwt.return (List.map (fun (x,y) -> OS.Netif.string_of_id x) vifs)
+          | None -> *)
+    Lwt.return []
 
   let get_ipv4 context vifid =
-(*    match !net_manager with 
-    | Some t ->
-      let id = OS.Netif.id_of_string vifid in
-      let addr = Net.Manager.get_intf_ipv4addr t id in
-      Lwt.return (Ipaddr.V4.to_string addr)
-    | None ->*)
-      Lwt.return ""
+    (*    match !net_manager with 
+          | Some t ->
+          let id = OS.Netif.id_of_string vifid in
+          let addr = Net.Manager.get_intf_ipv4addr t id in
+          Lwt.return (Ipaddr.V4.to_string addr)
+          | None ->*)
+    Lwt.return ""
 
   let inject_packet context vifid packet = 
     Lwt.return ()

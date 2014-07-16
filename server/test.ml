@@ -46,7 +46,7 @@ let connect_blkifs xs =
 let rec serve_forever ctx vch =
   lwt () = Vchan_http.http_handler Jsonrpc.call_of_string Jsonrpc.string_of_response RpcServer.process vch ctx in
   serve_forever ctx vch
- 
+
 let with_vchan evtchn_h domid nodepath f =
   Printf.printf "Initializing Server domid=%d xs_path=%s\n%!" domid nodepath;
   V.server ~evtchn_h ~domid ~xs_path:nodepath
@@ -55,7 +55,7 @@ let with_vchan evtchn_h domid nodepath f =
   let flow = Vchan_http.openflow vch in
   Printf.printf "Initialization done!\n%!";
   f flow
-      
+
 
 open V1_LWT
 
@@ -70,8 +70,8 @@ module Main (C:CONSOLE) = struct
     echo vch
 
   let start c =
-(*    Mirage_guest_agent.control_watch ();
-    Mirage_guest_agent.dummy_guest_agent ();*)
+    (*    Mirage_guest_agent.control_watch ();
+          Mirage_guest_agent.dummy_guest_agent ();*)
     lwt xs = Xs.make () in
     (*lwt blkifs = connect_blkifs xs in*)
     ignore(with_vchan (Eventchn.init ()) 0 "data/vchan" (serve_forever [](*blkifs*)));
