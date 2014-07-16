@@ -29,7 +29,7 @@ let t1 () =
   console1 () >>= function
   | `Error e -> fail (Failure "console1")
   | `Ok console1 ->
-  M1.start console1
+    M1.start console1
 
 let () =
   OS.Main.run (join [t1 ()])
